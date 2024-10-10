@@ -1,23 +1,23 @@
 <script>
-    import background from '../../../imo/src/audio/440126__blaukreuz__180619_berlinkoenigsdruck_wa_officetract_ST.mp3'; // Replace with your audio file paths
-    import stapler from '../../../imo/src/audio/85944__mwmarsh__stapler.mp3';
+    import background from '../audio/440126__blaukreuz__180619_berlinkoenigsdruck_wa_officetract_ST.mp3'; // Replace with your audio file paths
+    import stapler from '../audio/85944__mwmarsh__stapler.mp3';
     import phone
-        from '../../../imo/src/audio/277597__coral_island_studios__adult-woman-phone-conversation-laughing-yeah.mp3';
-    import fan from '../../../imo/src/audio/347299__suhral__opening-and-closing-a-small-electric-fan.mp3';
-    import whistle from '../../../imo/src/audio/366874__tianve8__whistle.wav';
-    import footsteps from '../../../imo/src/audio/336598__inspectorj__footsteps-concrete-a.wav';
-    import squeaking from '../../../imo/src/audio/85941__mwmarsh__squeaking-wood-floor.mp3';
-    import creaking from '../../../imo/src/audio/346156__suhral__creaking-door_5.mp3';
-    import beeping from '../../../imo/src/audio/347300__suhral__scanner-beeping-sound.mp3';
-    import car from '../../../imo/src/audio/437502__tianve8__car-door.wav';
-    import folding from '../../../imo/src/audio/459442__coral_island_studios__11-carboard-box-folding.mp3';
-    import cd from '../../../imo/src/audio/484659__inspectorj__cd-player-turn-on-turn-off-01-01.wav';
-    import typing from '../../../imo/src/audio/380170__pfranzen__typing-gently-but-quickly.ogg';
-    import banging from '../../../imo/src/audio/583793__pfranzen__banging-a-table.ogg';
-    import texting from '../../../imo/src/audio/635220__pfranzen__texting-on-an-old-flip-phone.ogg';
-    import leaving from '../../../imo/src/audio/659703__pfranzen__small-group-of-people-leaving-a-room.ogg';
-    import buzz from '../../../imo/src/audio/223183__framing_noise__cellphonebuzzvibratedoublefasthand.wav';
-    import what from '../../../imo/src/audio/685081__pfranzen__confused-man-saying-what.ogg';
+        from '../audio/277597__coral_island_studios__adult-woman-phone-conversation-laughing-yeah.mp3';
+    import fan from '../audio/347299__suhral__opening-and-closing-a-small-electric-fan.mp3';
+    import whistle from '../audio/366874__tianve8__whistle.wav';
+    import footsteps from '../audio/336598__inspectorj__footsteps-concrete-a.wav';
+    import squeaking from '../audio/85941__mwmarsh__squeaking-wood-floor.mp3';
+    import creaking from '../audio/346156__suhral__creaking-door_5.mp3';
+    import beeping from '../audio/347300__suhral__scanner-beeping-sound.mp3';
+    import car from '../audio/437502__tianve8__car-door.wav';
+    import folding from '../audio/459442__coral_island_studios__11-carboard-box-folding.mp3';
+    import cd from '../audio/484659__inspectorj__cd-player-turn-on-turn-off-01-01.wav';
+    import typing from '../audio/380170__pfranzen__typing-gently-but-quickly.ogg';
+    import banging from '../audio/583793__pfranzen__banging-a-table.ogg';
+    import texting from '../audio/635220__pfranzen__texting-on-an-old-flip-phone.ogg';
+    import leaving from '../audio/659703__pfranzen__small-group-of-people-leaving-a-room.ogg';
+    import buzz from '../audio/223183__framing_noise__cellphonebuzzvibratedoublefasthand.wav';
+    import what from '../audio/685081__pfranzen__confused-man-saying-what.ogg';
     import {onMount} from "svelte";
     import {Button} from "$lib/components/ui/button";
     import backgroundImg from "../img/olena-bohovyk-dIMJWLx1YbE-unsplash.jpg";
