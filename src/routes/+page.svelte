@@ -1,5 +1,5 @@
 <script>
-    import background from '../audio/440126__blaukreuz__180619_berlinkoenigsdruck_wa_officetract_ST.mp3'; // Replace with your audio file paths
+    import background from '../audio/748189__blaukreuz__220207_apartmentwindowopen_morning.mp3'; // Replace with your audio file paths
     import stapler from '../audio/85944__mwmarsh__stapler.mp3';
     import phone
         from '../audio/277597__coral_island_studios__adult-woman-phone-conversation-laughing-yeah.mp3';
