@@ -23,12 +23,6 @@
     import backgroundImg from "../img/olena-bohovyk-dIMJWLx1YbE-unsplash.jpg";
     import * as Select from "$lib/components/ui/select";
 
-    let audioBackground;
-    let audioOthers;
-    let isPlaying = false;
-    let intervalId;
-    let unlocked = false;  // Flag to track user interaction
-
     const colleages = [
         {value: "5", label: "5"},
         {value: "6", label: "6"},
@@ -38,89 +32,114 @@
         {value: "10", label: "10"}
     ];
 
-    onMount(() => {
-        audioBackground = new Audio(background);
-        audioOthers = [new Audio(stapler), new Audio(phone), new Audio(footsteps), new Audio(fan), new Audio(whistle),
-            new Audio(squeaking), new Audio(creaking), new Audio(beeping), new Audio(car), new Audio(folding), new Audio(cd), new Audio(typing),
-            new Audio(banging), new Audio(what), new Audio(texting), new Audio(leaving), new Audio(buzz)]
-// Add a listener to unlock audio on any user interaction
-        window.addEventListener('click', unlockAudio, {once: true}); // Remove after first click
-        window.addEventListener('touchstart', unlockAudio, {once: true}); // For touch devices
-    });
-
     let selectedNumber = {
         value: "5"
     };
 
-    function unlockAudio() {
-        unlocked = true;
+    let audioCtx;
+    let sourceBackground;
+    let sourceOthers = [];
+    let buffers = [];
+    let isPlaying = false;
+    let intervalId;
 
-        // User has interacted, play a silent audio buffer to unlock further playback
-        const silentBuffer = new AudioContext().createBuffer(1, 1, 22050);
-        const silentSource = new AudioContext().createBufferSource();
+    onMount(async () => {
+        audioCtx = new AudioContext();
 
-        silentSource.buffer = silentBuffer;
-        silentSource.connect(new AudioContext().destination);
-        silentSource.start(0);
+        try {
+            // Load background audio
+            const backgroundAudioBuffer = await fetch(background).then(res => res.arrayBuffer());
+            const backgroundBuffer = await audioCtx.decodeAudioData(backgroundAudioBuffer);
+            buffers.push(backgroundBuffer)
 
+            // Load other audio files
+            const otherAudioBuffers = await Promise.all([stapler, phone, fan, whistle, footsteps, squeaking, creaking, beeping, car, folding, cd, typing, banging, texting, leaving, buzz, what].map(async url => {
+                const res = await fetch(url);
+                return res.arrayBuffer();
+            }));
+            const otherBuffers = await Promise.all(otherAudioBuffers.map(buffer => audioCtx.decodeAudioData(buffer)));
+            buffers = buffers.concat(otherBuffers)
 
-        // Optional: Small timeout to ensure this finishes successfully
-        setTimeout(() => {
-            if(isPlaying && audioBackground.paused) {   // Resume playback if it was paused by the policy
-                audioBackground.play().then(() => {
-                    audioBackground.loop = true;
-                    if(!intervalId) playRandomAudio(); //Only start if needed
-
-                });
-            }
-
-        }, 100);
-
-        // Remove the listeners. No longer needed.
-        window.removeEventListener('click', unlockAudio);
-        window.removeEventListener('touchstart', unlockAudio);
-
-    }
-    function togglePlay() {
-        if (!audioBackground) return; // Guard against clicking before onMount completes
-        if (!unlocked) {     // If audio isn't unlocked, don't do anything
-            return;
+        } catch (error) {
+            console.error("Error loading audio:", error);
         }
+    });
+
+    function togglePlay() {
         isPlaying = !isPlaying;
 
         if (isPlaying) {
-            audioBackground.play().then(() => {
-                audioBackground.loop = true;
-                let time = 6000 + (10 - Number(selectedNumber.value)) * 1500
-                intervalId = setInterval(playRandomAudio, time);
-            });
+            playSound(buffers[0], true); // Play background audio
+
+            let time = 6000 + (10 - Number(selectedNumber.value)) * 1500;
+
+            intervalId = setInterval(() => {
+                playRandomAudio()
+            }, time);
+
+
         } else {
-            audioBackground.pause();
+            stopSound(sourceBackground);
             clearInterval(intervalId);
-            audioOthers.forEach(audio => audio.pause());
+
+            sourceOthers.forEach(source => {
+                if (source) source.stop();
+            });
+            sourceOthers = []; // Clear the array after stopping
         }
     }
 
 
-    function playRandomAudio() {
-        if (!audioOthers) return; //Guard
+    function playSound(buffer, loop = false) {
 
-        let randomIndex = Math.floor(Math.random() * audioOthers.length);
-        let randomAudio = audioOthers[randomIndex];
+        if (!buffer) return; // Guard
+        const source = audioCtx.createBufferSource();
+        source.buffer = buffer;
+        source.loop = loop;
+        source.connect(audioCtx.destination);
 
-        audioOthers.forEach(audio => {
-            if (audio !== randomAudio) {
-                audio.pause();
-                audio.currentTime = 0;
+        if (loop) {
+            sourceBackground = source
+        }
+
+
+        source.start();
+
+        if (!loop) {
+            sourceOthers.push(source)
+
+            source.onended = () => {
+                sourceOthers = sourceOthers.filter(s => s !== source);
             }
-        });
+        }
 
-        randomAudio.play().then(() => {
-            randomAudio.onended = () => {
-                randomAudio.currentTime = 0;
-                randomAudio.onended = null;
-            };
-        });
+    }
+
+
+    function stopSound(source) {
+        if (source) {
+            source.stop();
+            if (source === sourceBackground) sourceBackground = null;
+
+
+        }
+    }
+
+    function playRandomAudio() {
+        const otherBuffers = buffers.slice(1)
+
+
+        if (!otherBuffers.length) return
+
+
+        let randomIndex = Math.floor(Math.random() * otherBuffers.length);
+        let randomBuffer = otherBuffers[randomIndex];
+
+        // Stop currently playing other audio
+        sourceOthers.forEach(source => source.stop());
+        sourceOthers = []; // Clear the array
+
+        playSound(randomBuffer);
     }
 
 
@@ -174,11 +193,6 @@
                     Play
                 {/if}
             </Button>
-            <div>
-                {#if !unlocked}
-                    <p class="text-center">Tap "play" to start</p>
-                {/if}
-            </div>
         </div>
     </div>
 </div>
