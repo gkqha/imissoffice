@@ -27,6 +27,7 @@
     let audioOthers;
     let isPlaying = false;
     let intervalId;
+    let unlocked = false;  // Flag to track user interaction
 
     const colleages = [
         {value: "5", label: "5"},
@@ -42,15 +43,36 @@
         audioOthers = [new Audio(stapler), new Audio(phone), new Audio(footsteps), new Audio(fan), new Audio(whistle),
             new Audio(squeaking), new Audio(creaking), new Audio(beeping), new Audio(car), new Audio(folding), new Audio(cd), new Audio(typing),
             new Audio(banging), new Audio(what), new Audio(texting), new Audio(leaving), new Audio(buzz)]
+        // Add a listener to unlock audio on any user interaction
     });
 
     let selectedNumber = {
         value: "5"
     };
 
+    function unlockAudio() {
+        if (unlocked) return; // Prevent multiple unlocks
+
+        unlocked = true;
+
+        const silentBuffer = new AudioContext().createBuffer(1, 1, 22050);
+        const silentSource = new AudioContext().createBufferSource();
+        silentSource.buffer = silentBuffer;
+        silentSource.connect(new AudioContext().destination);
+        silentSource.start(0);
+
+
+        // Remove the listeners now that unlocked = true
+        window.removeEventListener('click', unlockAudio);
+        window.removeEventListener('touchstart', unlockAudio);
+    }
+
     function togglePlay() {
         if (!audioBackground) return; // Guard against clicking before onMount completes
-
+        if (!unlocked) {
+            unlockAudio();  // Unlock audio context on first click
+            // DON'T RETURN HERE!  Continue to start playback
+        }
         isPlaying = !isPlaying;
 
         if (isPlaying) {
@@ -130,7 +152,7 @@
                     </Select.Content>
                     <Select.Input name="favoriteFruit"/>
                 </Select.Root>
-                <div class="flex-auto"><p>{selectedNumber.value}</p></div>
+                <div class="flex-auto ms-5"><p>{selectedNumber.value}</p></div>
             </div>
             <Button on:click={togglePlay}>
                 {#if isPlaying}
@@ -139,7 +161,11 @@
                     Play
                 {/if}
             </Button>
-
+            <div>
+                {#if !unlocked}
+                    <p class="text-center">Tap to start</p>
+                {/if}
+            </div>
         </div>
     </div>
 </div>
