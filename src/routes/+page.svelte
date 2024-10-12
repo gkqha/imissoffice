@@ -17,7 +17,11 @@
     import texting from '../audio/635220__pfranzen__texting-on-an-old-flip-phone.ogg';
     import leaving from '../audio/659703__pfranzen__small-group-of-people-leaving-a-room.ogg';
     import buzz from '../audio/223183__framing_noise__cellphonebuzzvibratedoublefasthand.wav';
+    import typing2 from '../audio/624499__tinyray__typing-tiny.m4a';
+    import typing3 from '../audio/685984__zrrion__keyboard-typing-sounds-modded-omnikey-101.mp3';
     import what from '../audio/685081__pfranzen__confused-man-saying-what.ogg';
+    import click from '../audio/687106__aphom000__mouse-1-button-long-click.wav';
+    import click2 from '../audio/678248__pixeliota__mouse-click-sound.mp3';
     import {onMount} from "svelte";
     import {Button} from "$lib/components/ui/button";
     import backgroundImg from "../img/olena-bohovyk-dIMJWLx1YbE-unsplash.jpg";
@@ -53,7 +57,7 @@
             buffers.push(backgroundBuffer)
 
             // Load other audio files
-            const otherAudioBuffers = await Promise.all([stapler, phone, fan, whistle, footsteps, squeaking, creaking, beeping, car, folding, cd, typing, banging, texting, leaving, buzz, what].map(async url => {
+            const otherAudioBuffers = await Promise.all([stapler, phone, fan, whistle, footsteps, squeaking, creaking, beeping, car, folding, cd, typing, banging, texting, leaving, buzz, what, typing2, typing3, click, click2].map(async url => {
                 const res = await fetch(url);
                 return res.arrayBuffer();
             }));
